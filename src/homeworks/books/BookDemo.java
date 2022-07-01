@@ -1,25 +1,33 @@
 package homeworks.books;
 
+import homeworks.books.models.Author;
+import homeworks.books.models.Book;
+import homeworks.books.storage.AuthorStorage;
+import homeworks.books.storage.BookStorage;
+
 import java.util.Scanner;
 
 public class BookDemo implements Commands{
     private static Scanner scanner = new Scanner(System.in);
     private static BookStorage bookStorage = new BookStorage();
+
+    private static AuthorStorage authorStorage = new AuthorStorage();
     public static void main(String[] args) {
-        bookStorage.add(new Book("Faust", "Goethe's", 6000, 6, "Drama"));
-        bookStorage.add(new Book("Divine comedy", "Dante Alighieri", 5000, 2, "Poems"));
-        bookStorage.add(new Book("Jane Eyre", "Charlotte Brontë", 4600, 7, "Novel"));
-        bookStorage.add(new Book("Ascanio", "Alexandre Dumas", 4200, 1, "Drama"));
-        bookStorage.add(new Book("Black tulip", "Alexandre Dumas", 2600, 3, "Drama"));
-        bookStorage.add(new Book("Fahrenheit 451", "Ray Bradbury", 3200, 2, "Novel"));
+        Author goethes = new Author("Johann Wolfgang von Goethe", "German", "male",  "noemail", "28 August 1749", "Free Imperial City of Frankfurt, Holy Roman Empire", "22 March 1832");
+        Author dante = new Author("Dante Alighieri", "Italian","male", "nomale", "1265", "Florence, Republic of Florence", "14 September 1321");
+        Author bronte = new Author("Charlotte Brontë", "English", "female", "nomail", "21 April 1816", "Thornton, Yorkshire, England", "31 March 1855");
+        authorStorage.addAuthor(goethes);
+        authorStorage.addAuthor(dante);
+        authorStorage.addAuthor(bronte);
+        bookStorage.add(new Book("Faust", goethes, 6000, 6, "Drama"));
+        bookStorage.add(new Book("Divine comedy", dante, 5000, 2, "Poems"));
+        bookStorage.add(new Book("Jane Eyre", bronte, 4600, 7, "Novel"));
+//        bookStorage.add(new Book("Ascanio", "Alexandre Dumas", 4200, 1, "Drama"));
+//        bookStorage.add(new Book("Black tulip", "Alexandre Dumas", 2600, 3, "Drama"));
+//        bookStorage.add(new Book("Fahrenheit 451", "Ray Bradbury", 3200, 2, "Novel"));
         boolean run = true;
         while (run){
-            System.out.println("Input "  + EXIT + " for exit.");
-            System.out.println("Input " + ADD_BOOK + " for add book.");
-            System.out.println("Input " + PRINT_ALL_BOOKS + " for print all books.");
-            System.out.println("Input " + PRINT_BOOKS_BY_AUTHORNAME + " for print books by author name.");
-            System.out.println("Input " + PRINT_BOOKS_BY_GENRE + " for print books by genre.");
-            System.out.println("Input " + PRINT_BY_PRICE_RANGE + " for print books by price range.");
+            Commands.printCommand();
             int command = Integer.parseInt(scanner.nextLine());
             switch (command){
                 case EXIT:
@@ -40,11 +48,51 @@ public class BookDemo implements Commands{
                 case PRINT_BY_PRICE_RANGE:
                     printByPriceRange();
                     break;
+                case ADD_AUTHOR:
+                    addAuthor();
+                    break;
+                case PRINT_ALL_AUTHOR:
+                    authorStorage.printArray();
+                    break;
                 default:
                     System.out.println("Invalid value");
                     break;
             }
         }
+    }
+
+    private static Author addAuthor() {
+        bookStorage.returnGetAuthor(bookStorage.getAuthor());
+
+        System.out.println("Author object is created...");
+        System.out.println("Input author name.");
+        String authorName = scanner.nextLine();
+
+        System.out.println("Input author nationality.");
+        String authorNationality = scanner.nextLine();
+
+        System.out.println("Chose author gender 1 is male - 2 is female.");
+        String c = String.valueOf(scanner.nextLine().charAt(0));
+        if(Integer.parseInt(c) == 1){
+            c = "male";
+        } else if (Integer.parseInt(c) == 2) {
+            c = "female";
+        }
+        System.out.println("Input author email.");
+        String authorEmail = scanner.nextLine();
+
+        System.out.println("Input author birth day.");
+        String authorBirthDay = scanner.nextLine();
+
+        System.out.println("Input author place of birth.");
+        String authorPlaceOfBirth = scanner.nextLine();
+
+        System.out.println("Input author date of death.");
+        String authorDateOfDeath = scanner.nextLine();
+
+        Author author = new Author(authorName, authorNationality, c, authorEmail, authorBirthDay, authorPlaceOfBirth, authorDateOfDeath);
+        authorStorage.addAuthor(author);
+        return author;
     }
 
     private static void printByPriceRange() {
@@ -67,24 +115,31 @@ public class BookDemo implements Commands{
         bookStorage.printBookByGenre(bGenre);
     }
 
-    private static void addBooks(){
-        System.out.println("Input book title.");
-        String bTitle = scanner.nextLine();
-        System.out.println("Input book author name.");
-        String bAuthorName = scanner.nextLine();
-        System.out.println("Input book price.");
-        String bPriceStr = scanner.nextLine();
-        System.out.println("Input book count.");
-        String bCountStr = scanner.nextLine();
-        System.out.println("Input book genre.");
-        String bGenre = scanner.nextLine();
+    private static void addBooks() {
+                System.out.println("Input book title.");
+                String bTitle = scanner.nextLine();
+                Author addNewAuthor = addAuthor();
+                System.out.println("Input book price.");
+                String bPriceStr = scanner.nextLine();
+                System.out.println("Input book count.");
+                String bCountStr = scanner.nextLine();
+                System.out.println("Input book genre.");
+                String bGenre = scanner.nextLine();
+                double bPrice = Double.parseDouble(bPriceStr);
 
-        double bPrice = Double.parseDouble(bPriceStr);
+                int bCount = Integer.parseInt(bCountStr);
+                Book book = new Book(bTitle, addNewAuthor, bPrice, bCount, bGenre);
+                bookStorage.add(book);
+                System.out.println("Book created");
 
-        int bCount = Integer.parseInt(bCountStr);
+            }
+        }
 
-        Book book = new Book(bTitle, bAuthorName, bPrice, bCount, bGenre);
-        bookStorage.add(book);
-        System.out.println("Book created");
-    }
-}
+
+
+
+
+
+
+
+

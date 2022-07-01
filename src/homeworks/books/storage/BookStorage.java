@@ -1,13 +1,14 @@
-package homeworks.books;
+package homeworks.books.storage;
 
-import java.util.concurrent.atomic.AtomicReference;
+import homeworks.books.models.Book;
+import homeworks.books.models.Author;
 
-public class BookStorage extends Book{
+public class BookStorage extends Book {
     private Book[] array = new Book[10];
 
     private int size = 0;
 
-    void add(Book value){
+    public void add(Book value){
         if(size == array.length){
             Book[] tmp = new Book[array.length + 10];
             for (int i = 0; i < size; i++) {
@@ -18,16 +19,24 @@ public class BookStorage extends Book{
         array[size++] = value;
     }
 
-    void printArray(){
+    public void printArray(){
         for (int i = 0; i < size; i++) {
             System.out.println(i + ". " + array[i]);
         }
     }
 
-    void printBookByAuthor(String bookByAuthor){
+    public void returnGetAuthor(Author authorName){
+        for (int i = 0; i < size; i++) {
+            while (array[i].getAuthor().equals(authorName)){
+                System.out.println("such an author already exists");
+            }
+        }
+    }
+
+    public void printBookByAuthor(String bookByAuthor){
         int count = 0;
         for (int i = 0; i < size; i++) {
-            if(array[i].getAuthorName().equals(bookByAuthor)){
+            if(array[i].getAuthor().equals(bookByAuthor)){
                 System.out.println(array[i]);
                 count++;
             }
@@ -37,7 +46,7 @@ public class BookStorage extends Book{
         }
     }
 
-    void printBookByGenre(String bGenre) {
+    public void printBookByGenre(String bGenre) {
         int count = 0;
         for (int i = 0; i < size; i++) {
             if(array[i].getGenre().equals(bGenre)){
@@ -53,7 +62,7 @@ public class BookStorage extends Book{
     public void printByPriceRange(double firstPrice, double secondPrice) {
         int count = 0;
         for (int i = 0; i < size; i++) {
-            if(array[i].getPrice() < secondPrice && array[i].getPrice() > firstPrice){
+            if(array[i].getPrice() <= secondPrice && array[i].getPrice() >= firstPrice){
                 System.out.println(array[i]);
                 count++;
             }
