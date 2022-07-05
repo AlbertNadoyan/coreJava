@@ -1,7 +1,7 @@
 package homeworks.books.storage;
 
+import homeworks.books.Exception.AuthorNotFoundException;
 import homeworks.books.models.Author;
-import homeworks.books.models.Book;
 
 public class AuthorStorage extends Author {
     private Author[] array = new Author[10];
@@ -18,6 +18,19 @@ public class AuthorStorage extends Author {
         array[size++] = value;
     }
 
+    public void printAuthorByIndex(int authorIndex) throws AuthorNotFoundException {
+        int authorCount = 0;
+        for (int i = authorIndex; i < size; i++) {
+            if(authorIndex == i){
+                System.out.println(array[i]);
+                authorCount++;
+            }
+        }
+        if(authorCount == 0){
+            throw new AuthorNotFoundException();
+        }
+    }
+
     public void printArray(){
         for (int i = 0; i < size; i++) {
             System.out.println(i + ". " + array[i]);
@@ -28,11 +41,6 @@ public class AuthorStorage extends Author {
         return size;
     }
 
-    public Author getAuthorByIndex(int index){
-        if(index < 0 | index >= size){
-            return null;
-        }
-        return array[index];
-    }
+
 
 }

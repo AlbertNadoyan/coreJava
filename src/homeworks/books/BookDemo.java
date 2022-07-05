@@ -1,10 +1,12 @@
 package homeworks.books;
 
+import homeworks.books.Exception.AuthorNotFoundException;
 import homeworks.books.models.Author;
 import homeworks.books.models.Book;
 import homeworks.books.storage.AuthorStorage;
 import homeworks.books.storage.BookStorage;
 
+import javax.print.DocFlavor;
 import java.util.Scanner;
 
 public class BookDemo implements Commands{
@@ -12,7 +14,7 @@ public class BookDemo implements Commands{
     private static BookStorage bookStorage = new BookStorage();
 
     private static AuthorStorage authorStorage = new AuthorStorage();
-    public static void main(String[] args) {
+    public static void main(String[] args) throws AuthorNotFoundException {
         Author goethes = new Author("Johann Wolfgang von Goethe", "German", "male",  "noemail", "28 August 1749", "Free Imperial City of Frankfurt, Holy Roman Empire", "22 March 1832");
         Author dante = new Author("Dante Alighieri", "Italian","male", "nomale", "1265", "Florence, Republic of Florence", "14 September 1321");
         Author bronte = new Author("Charlotte Brontë", "English", "female", "nomail", "21 April 1816", "Thornton, Yorkshire, England", "31 March 1855");
@@ -28,7 +30,13 @@ public class BookDemo implements Commands{
         boolean run = true;
         while (run){
             Commands.printCommand();
-            int command = Integer.parseInt(scanner.nextLine());
+
+            int command;
+            try {
+                command = Integer.parseInt(scanner.nextLine());
+            }catch (NumberFormatException e){
+                command = -1;
+            }
             switch (command){
                 case EXIT:
                     run = false;
@@ -54,6 +62,15 @@ public class BookDemo implements Commands{
                 case PRINT_ALL_AUTHOR:
                     authorStorage.printArray();
                     break;
+                case PRINT_AUTHOR_BY_INDEX:
+                    authorStorage.printArray();
+                    try {
+                        printAuthorByIndex();
+                    }catch (AuthorNotFoundException e){
+                        System.out.println("No author for your input index.");
+                    }
+
+                    break;
                 default:
                     System.out.println("Invalid value");
                     break;
@@ -61,8 +78,20 @@ public class BookDemo implements Commands{
         }
     }
 
+    private static void printAuthorByIndex() throws AuthorNotFoundException {
+        System.out.println("Input index for print author.");
+        int authorIndex = 0;
+        try {
+            authorIndex = Integer.parseInt(scanner.nextLine());
+        }catch (NumberFormatException e){
+            System.out.println("Input only number for author index.");
+            printAuthorByIndex();
+        }
+        authorStorage.printAuthorByIndex(authorIndex);
+    }
+
     private static Author addAuthor() {
-        bookStorage.returnGetAuthor(bookStorage.getAuthor());
+//        bookStorage.returnGetAuthor(bookStorage.getAuthor());
 
         System.out.println("Author object is created...");
         System.out.println("Input author name.");
@@ -71,13 +100,8 @@ public class BookDemo implements Commands{
         System.out.println("Input author nationality.");
         String authorNationality = scanner.nextLine();
 
-        System.out.println("Chose author gender 1 is male - 2 is female.");
-        String c = String.valueOf(scanner.nextLine().charAt(0));
-        if(Integer.parseInt(c) == 1){
-            c = "male";
-        } else if (Integer.parseInt(c) == 2) {
-            c = "female";
-        }
+        String gender = inputGender();
+
         System.out.println("Input author email.");
         String authorEmail = scanner.nextLine();
 
@@ -90,16 +114,46 @@ public class BookDemo implements Commands{
         System.out.println("Input author date of death.");
         String authorDateOfDeath = scanner.nextLine();
 
-        Author author = new Author(authorName, authorNationality, c, authorEmail, authorBirthDay, authorPlaceOfBirth, authorDateOfDeath);
+        Author author = new Author(authorName, authorNationality, gender, authorEmail, authorBirthDay, authorPlaceOfBirth, authorDateOfDeath);
         authorStorage.addAuthor(author);
         return author;
     }
 
+    private static String inputGender() {
+        System.out.println("Chose author gender 1 is male - 2 is female.");
+        String c = null;
+        try {
+            c = String.valueOf(scanner.nextLine().charAt(0));
+            if(Integer.parseInt(c) == 1){
+                c = "male";
+            } else if (Integer.parseInt(c) == 2) {
+                c = "female";
+            }else {
+                System.out.println("Input only 1 or 2");
+                inputGender();
+            }
+        }catch (NumberFormatException e){
+            System.out.println("Input only 1 or 2");
+            inputGender();
+        }
+        return c;
+    }
+
     private static void printByPriceRange() {
         System.out.println("Input first number.");
-        double firstPrice = Double.parseDouble(scanner.nextLine());
+        double firstPrice = 0;
+        try {
+            firstPrice = Double.parseDouble(scanner.nextLine());
+        }catch (NumberFormatException e){
+            System.out.println("Only number");
+        }
         System.out.println("Input second number.");
-        double secondPrice = Double.parseDouble(scanner.nextLine());
+        double secondPrice = 0;
+        try {
+            secondPrice = Double.parseDouble(scanner.nextLine());
+        }catch (NumberFormatException e){
+            System.out.println("Only number");
+        }
         bookStorage.printByPriceRange(firstPrice, secondPrice);
     }
 
@@ -125,9 +179,14 @@ public class BookDemo implements Commands{
                 String bCountStr = scanner.nextLine();
                 System.out.println("Input book genre.");
                 String bGenre = scanner.nextLine();
-                double bPrice = Double.parseDouble(bPriceStr);
-
-                int bCount = Integer.parseInt(bCountStr);
+                double bPrice = 0;
+                int bCount = 0;
+                try {
+                    bPrice = Double.parseDouble(bPriceStr);
+                    bCount = Integer.parseInt(bCountStr);
+                }catch (NumberFormatException e){
+                    System.out.println("Only number");
+                }
                 Book book = new Book(bTitle, addNewAuthor, bPrice, bCount, bGenre);
                 bookStorage.add(book);
                 System.out.println("Book created");
