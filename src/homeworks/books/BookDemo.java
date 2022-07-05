@@ -130,7 +130,13 @@ public class BookDemo implements Commands{
                 c = "female";
             }else {
                 System.out.println("Input only 1 or 2");
-                inputGender();
+                c = String.valueOf(scanner.nextLine().charAt(0));
+                if(Integer.parseInt(c) == 1){
+                   c= "male";
+                }else if(Integer.parseInt(c) == 2){
+                    c = "female";
+                }
+//                inputGender();
             }
         }catch (NumberFormatException e){
             System.out.println("Input only 1 or 2");

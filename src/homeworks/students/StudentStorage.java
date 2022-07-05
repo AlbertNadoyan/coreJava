@@ -54,4 +54,11 @@ public class StudentStorage {
         }
     }
 
+    public void printStudentGender(String stGender) {
+        for (int i = 0; i < size; i++) {
+            if(array[i].getGender().equals(stGender)){
+                System.out.println(array[i]);
+            }
+        }
+    }
 }
