@@ -1,15 +1,17 @@
 package homeworks.books.models;
 
+import homeworks.books.Gender;
+
 public class Author {
     private String  authorName;
     private String nationality;
-    private String gender;
+    private Gender gender;
     private String email;
     private String birthDay;
     private String placeOfBirth;
     private String dateOfDeath;
 
-    public Author(String authorName, String nationality, String gender, String email, String birthDay, String placeOfBirth, String dateOfDeath) {
+    public Author(String authorName, String nationality, Gender gender, String email, String birthDay, String placeOfBirth, String dateOfDeath) {
         this.authorName = authorName;
         this.nationality = nationality;
         this.gender = gender;
@@ -21,6 +23,7 @@ public class Author {
 
     public Author() {
     }
+
 
     public String getAuthorName() {
         return authorName;
@@ -38,11 +41,11 @@ public class Author {
         this.nationality = nationality;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

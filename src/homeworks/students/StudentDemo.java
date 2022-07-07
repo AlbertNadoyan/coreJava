@@ -7,6 +7,7 @@ public class StudentDemo {
     private static StudentStorage studentStorage = new StudentStorage();
 
     public static void main(String[] args) {
+        studentStorage.add(new Student("asdfd", "dfdg", "fgh", 45, "78451845", "fghj", "Java"));
         boolean run = true;
         while (run){
             System.out.println("Please input 0 for exit.");
@@ -16,6 +17,7 @@ public class StudentDemo {
             System.out.println("Please input 4 for print student by lesson.");
             System.out.println("Please input 5 for students count.");
             System.out.println("Please input 6 for change students lesson.");
+            System.out.println("Please input 7 for print students gender male or female.");
             int command = Integer.parseInt(scanner.nextLine());
             switch (command){
                 case 0:
@@ -49,6 +51,12 @@ public class StudentDemo {
                     System.out.println("Please input new lesson name.");
                     String newLesson = scanner.nextLine();
                     studentStorage.replaceLesson(stIndex, newLesson);
+                    break;
+                case 7:
+                    studentStorage.printArray();
+                    System.out.println("Please input student gender.");
+                    String stGender = scanner.nextLine();
+                    studentStorage.printStudentGender(stGender);
                     break;
                 default:
                     System.out.println("Invalid command.");

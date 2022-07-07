@@ -1,23 +1,25 @@
 package homeworks.books;
 
 import homeworks.books.Exception.AuthorNotFoundException;
+import homeworks.books.Exception.ExitUserPage;
 import homeworks.books.models.Author;
 import homeworks.books.models.Book;
+import homeworks.books.models.Registration;
 import homeworks.books.storage.AuthorStorage;
 import homeworks.books.storage.BookStorage;
+import homeworks.books.storage.UserStorage;
 
-import javax.print.DocFlavor;
 import java.util.Scanner;
 
 public class BookDemo implements Commands{
     private static Scanner scanner = new Scanner(System.in);
     private static BookStorage bookStorage = new BookStorage();
-
     private static AuthorStorage authorStorage = new AuthorStorage();
-    public static void main(String[] args) throws AuthorNotFoundException {
-        Author goethes = new Author("Johann Wolfgang von Goethe", "German", "male",  "noemail", "28 August 1749", "Free Imperial City of Frankfurt, Holy Roman Empire", "22 March 1832");
-        Author dante = new Author("Dante Alighieri", "Italian","male", "nomale", "1265", "Florence, Republic of Florence", "14 September 1321");
-        Author bronte = new Author("Charlotte Brontë", "English", "female", "nomail", "21 April 1816", "Thornton, Yorkshire, England", "31 March 1855");
+    private static UserStorage userStorage = new UserStorage();
+    public static void main(String[] args) throws AuthorNotFoundException, ExitUserPage {
+        Author goethes = new Author("Johann Wolfgang von Goethe", "German", Gender.MALE,  "noemail", "28 August 1749", "Free Imperial City of Frankfurt, Holy Roman Empire", "22 March 1832");
+        Author dante = new Author("Dante Alighieri", "Italian",Gender.MALE, "nomale", "1265", "Florence, Republic of Florence", "14 September 1321");
+        Author bronte = new Author("Charlotte Brontë", "English", Gender.FEMALE, "nomail", "21 April 1816", "Thornton, Yorkshire, England", "31 March 1855");
         authorStorage.addAuthor(goethes);
         authorStorage.addAuthor(dante);
         authorStorage.addAuthor(bronte);
@@ -28,54 +30,99 @@ public class BookDemo implements Commands{
 //        bookStorage.add(new Book("Black tulip", "Alexandre Dumas", 2600, 3, "Drama"));
 //        bookStorage.add(new Book("Fahrenheit 451", "Ray Bradbury", 3200, 2, "Novel"));
         boolean run = true;
-        while (run){
-            Commands.printCommand();
-
+        while (run) {
+            Commands.printRegLog();
             int command;
             try {
                 command = Integer.parseInt(scanner.nextLine());
-            }catch (NumberFormatException e){
+
+            } catch (NumberFormatException e) {
                 command = -1;
             }
-            switch (command){
-                case EXIT:
-                    run = false;
-                    break;
-                case ADD_BOOK:
-                    addBooks();
-                    break;
-                case PRINT_ALL_BOOKS:
-                    bookStorage.printArray();
-                    break;
-                case PRINT_BOOKS_BY_AUTHORNAME:
-                    printBookByAuthorName();
-                    break;
-                case PRINT_BOOKS_BY_GENRE:
-                    printBookByGenre();
-                    break;
-                case PRINT_BY_PRICE_RANGE:
-                    printByPriceRange();
-                    break;
-                case ADD_AUTHOR:
-                    addAuthor();
-                    break;
-                case PRINT_ALL_AUTHOR:
-                    authorStorage.printArray();
-                    break;
-                case PRINT_AUTHOR_BY_INDEX:
-                    authorStorage.printArray();
-                    try {
-                        printAuthorByIndex();
-                    }catch (AuthorNotFoundException e){
-                        System.out.println("No author for your input index.");
-                    }
 
-                    break;
-                default:
-                    System.out.println("Invalid value");
-                    break;
+            if(command == EXIT){
+                run = false;
+            }
+
+            if (command == REGOSTRATION) {
+                regUser();
+            }
+
+            if (command == LOGIN) {
+                logUser();
+                while (userStorage.getSize() != 0){
+                    Commands.printCommand();
+                    int innerCommand = Integer.parseInt(scanner.nextLine());
+                    switch (innerCommand) {
+                        case ADD_BOOK:
+                            addBooks();
+                            break;
+                        case PRINT_ALL_BOOKS:
+                            bookStorage.printArray();
+                            break;
+                        case PRINT_BOOKS_BY_AUTHORNAME:
+                            printBookByAuthorName();
+                            break;
+                        case PRINT_BOOKS_BY_GENRE:
+                            printBookByGenre();
+                            break;
+                        case PRINT_BY_PRICE_RANGE:
+                            printByPriceRange();
+                            break;
+                        case ADD_AUTHOR:
+                            addAuthor();
+                            break;
+                        case PRINT_ALL_AUTHOR:
+                            authorStorage.printArray();
+                            break;
+                        case PRINT_AUTHOR_BY_INDEX:
+                            try {
+                                printAuthorByIndex();
+                            } catch (AuthorNotFoundException e) {
+                                System.out.println("No author for your input index.");
+                            }
+                        case EXIT_USER_PAGE:
+                            throw new ExitUserPage("User page not exit");
+                        default:
+                            System.out.println("Invalid value");
+                            break;
+                    }
+                }
             }
         }
+        }
+
+    private static void logUser(){
+        System.out.println("Input userName");
+        String userName = scanner.nextLine();
+        System.out.println("Input user password");
+        String userPassword = scanner.nextLine();
+        userStorage.logUser(userName, userPassword);
+    }
+
+    private static void regUser(){
+        System.out.println("Input user name");
+        String uName = scanner.nextLine();
+        System.out.println("Input user surname");
+        String uSurname = scanner.nextLine();
+        System.out.println("Input user years old");
+        int uYears = 0;
+        try {
+            uYears = Integer.parseInt(scanner.nextLine());
+        }catch (NumberFormatException e){
+            System.out.println("Input only number");
+        }
+
+        System.out.println("Input user username");
+        String uUserName = scanner.nextLine();
+        System.out.println("Input user password");
+        String uPassword = scanner.nextLine();
+
+        Registration registration = new Registration(uName, uSurname, uYears, uUserName, uPassword);
+        userStorage.registrationUser(registration);
+        System.out.println("User created.");
+
+
     }
 
     private static void printAuthorByIndex() throws AuthorNotFoundException {
@@ -100,7 +147,7 @@ public class BookDemo implements Commands{
         System.out.println("Input author nationality.");
         String authorNationality = scanner.nextLine();
 
-        String gender = inputGender();
+        Gender gender = inputGender();
 
         System.out.println("Input author email.");
         String authorEmail = scanner.nextLine();
@@ -119,30 +166,32 @@ public class BookDemo implements Commands{
         return author;
     }
 
-    private static String inputGender() {
-        System.out.println("Chose author gender 1 is male - 2 is female.");
-        String c = null;
+    private static Gender inputGender() {
+        System.out.println("Chose author gender male or female");
+        Gender g = null;
         try {
-            c = String.valueOf(scanner.nextLine().charAt(0));
-            if(Integer.parseInt(c) == 1){
-                c = "male";
-            } else if (Integer.parseInt(c) == 2) {
-                c = "female";
-            }else {
-                System.out.println("Input only 1 or 2");
-                c = String.valueOf(scanner.nextLine().charAt(0));
-                if(Integer.parseInt(c) == 1){
-                   c= "male";
-                }else if(Integer.parseInt(c) == 2){
-                    c = "female";
-                }
-//                inputGender();
-            }
-        }catch (NumberFormatException e){
-            System.out.println("Input only 1 or 2");
-            inputGender();
+            g = Gender.valueOf(scanner.nextLine());
+        }catch (IllegalArgumentException e){
+            System.out.println("Invalid gender");
         }
-        return c;
+        return g;
+//        System.out.println("Chose author gender 1 is male - 2 is female.");
+//        String c = null;
+//        try {
+//            c = String.valueOf(scanner.nextLine().charAt(0));
+//            if(Integer.parseInt(c) == 1){
+//                c = "male";
+//            } else if (Integer.parseInt(c) == 2) {
+//                c = "female";
+//            }else {
+//                System.out.println("Input only 1 or 2");
+//                inputGender();
+//            }
+//        }catch (NumberFormatException e){
+//            System.out.println("Input only number");
+//            inputGender();
+//        }
+//        return c;
     }
 
     private static void printByPriceRange() {
