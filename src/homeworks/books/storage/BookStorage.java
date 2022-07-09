@@ -36,7 +36,7 @@ public class BookStorage extends Book {
     public void printBookByAuthor(String bookByAuthor){
         int count = 0;
         for (int i = 0; i < size; i++) {
-            if(array[i].getAuthor().equals(bookByAuthor)){
+            if(array[i].getAuthor().getAuthorName().equals(bookByAuthor)){
                 System.out.println(array[i]);
                 count++;
             }

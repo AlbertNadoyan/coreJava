@@ -2,6 +2,7 @@ package homeworks.books;
 
 import homeworks.books.Exception.AuthorNotFoundException;
 import homeworks.books.Exception.ExitUserPage;
+import homeworks.books.Exception.UsernameAandPasswordLengthMismatch;
 import homeworks.books.models.Author;
 import homeworks.books.models.Book;
 import homeworks.books.models.Registration;
@@ -16,7 +17,7 @@ public class BookDemo implements Commands{
     private static BookStorage bookStorage = new BookStorage();
     private static AuthorStorage authorStorage = new AuthorStorage();
     private static UserStorage userStorage = new UserStorage();
-    public static void main(String[] args) throws AuthorNotFoundException, ExitUserPage {
+    public static void main(String[] args) throws AuthorNotFoundException, ExitUserPage, UsernameAandPasswordLengthMismatch {
         Author goethes = new Author("Johann Wolfgang von Goethe", "German", Gender.MALE,  "noemail", "28 August 1749", "Free Imperial City of Frankfurt, Holy Roman Empire", "22 March 1832");
         Author dante = new Author("Dante Alighieri", "Italian",Gender.MALE, "nomale", "1265", "Florence, Republic of Florence", "14 September 1321");
         Author bronte = new Author("Charlotte Brontë", "English", Gender.FEMALE, "nomail", "21 April 1816", "Thornton, Yorkshire, England", "31 March 1855");
@@ -100,7 +101,7 @@ public class BookDemo implements Commands{
         userStorage.logUser(userName, userPassword);
     }
 
-    private static void regUser(){
+    private static void regUser() throws UsernameAandPasswordLengthMismatch {
         System.out.println("Input user name");
         String uName = scanner.nextLine();
         System.out.println("Input user surname");
@@ -117,7 +118,9 @@ public class BookDemo implements Commands{
         String uUserName = scanner.nextLine();
         System.out.println("Input user password");
         String uPassword = scanner.nextLine();
-
+        if(uPassword.length() <= 5 && uUserName.length() <= 5){
+            throw new UsernameAandPasswordLengthMismatch("username and password length mismatch");
+        }
         Registration registration = new Registration(uName, uSurname, uYears, uUserName, uPassword);
         userStorage.registrationUser(registration);
         System.out.println("User created.");
