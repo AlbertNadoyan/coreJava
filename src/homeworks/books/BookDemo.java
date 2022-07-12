@@ -1,32 +1,27 @@
 package homeworks.books;
 
-import homeworks.books.Exception.AuthorNotFoundException;
-import homeworks.books.Exception.ExitUserPage;
-import homeworks.books.Exception.UsernameAandPasswordLengthMismatch;
-import homeworks.books.models.Author;
-import homeworks.books.models.Book;
-import homeworks.books.models.Registration;
+import homeworks.books.exception.AuthorNotFoundException;
+import homeworks.books.exception.ExitUserPage;
+import homeworks.books.exception.UsernameAandPasswordLengthMismatch;
+import homeworks.books.models.*;
 import homeworks.books.storage.AuthorStorage;
 import homeworks.books.storage.BookStorage;
 import homeworks.books.storage.UserStorage;
 
 import java.util.Scanner;
 
+import static homeworks.books.models.UserType.ADMIN;
+import static homeworks.books.models.UserType.USER;
+
 public class BookDemo implements Commands{
     private static Scanner scanner = new Scanner(System.in);
     private static BookStorage bookStorage = new BookStorage();
     private static AuthorStorage authorStorage = new AuthorStorage();
     private static UserStorage userStorage = new UserStorage();
+
+
     public static void main(String[] args) throws AuthorNotFoundException, ExitUserPage, UsernameAandPasswordLengthMismatch {
-        Author goethes = new Author("Johann Wolfgang von Goethe", "German", Gender.MALE,  "noemail", "28 August 1749", "Free Imperial City of Frankfurt, Holy Roman Empire", "22 March 1832");
-        Author dante = new Author("Dante Alighieri", "Italian",Gender.MALE, "nomale", "1265", "Florence, Republic of Florence", "14 September 1321");
-        Author bronte = new Author("Charlotte Brontë", "English", Gender.FEMALE, "nomail", "21 April 1816", "Thornton, Yorkshire, England", "31 March 1855");
-        authorStorage.addAuthor(goethes);
-        authorStorage.addAuthor(dante);
-        authorStorage.addAuthor(bronte);
-        bookStorage.add(new Book("Faust", goethes, 6000, 6, "Drama"));
-        bookStorage.add(new Book("Divine comedy", dante, 5000, 2, "Poems"));
-        bookStorage.add(new Book("Jane Eyre", bronte, 4600, 7, "Novel"));
+        initData();
 //        bookStorage.add(new Book("Ascanio", "Alexandre Dumas", 4200, 1, "Drama"));
 //        bookStorage.add(new Book("Black tulip", "Alexandre Dumas", 2600, 3, "Drama"));
 //        bookStorage.add(new Book("Fahrenheit 451", "Ray Bradbury", 3200, 2, "Novel"));
@@ -51,7 +46,20 @@ public class BookDemo implements Commands{
 
             if (command == LOGIN) {
                 logUser();
-                while (userStorage.getSize() != 0){
+                while (userStorage.getAdmin(ADMIN)){
+                    Commands.printAdminCommand();
+                    int adminCommand = Integer.parseInt(scanner.nextLine());
+                    switch (adminCommand){
+                        case ADD_BOOK:
+                            addBooks();
+                            break;
+                        case ADD_AUTHOR:
+                            addAuthor();
+                            break;
+                        }
+                }
+
+                while (userStorage.getAdmin(USER)){
                     Commands.printCommand();
                     int innerCommand = Integer.parseInt(scanner.nextLine());
                     switch (innerCommand) {
@@ -89,9 +97,22 @@ public class BookDemo implements Commands{
                             break;
                     }
                 }
+                }
+
             }
         }
-        }
+
+    private static void initData() {
+        Author goethes = new Author("Johann Wolfgang von Goethe", "German", Gender.MALE,  "noemail", "28 August 1749", "Free Imperial City of Frankfurt, Holy Roman Empire", "22 March 1832");
+        Author dante = new Author("Dante Alighieri", "Italian",Gender.MALE, "nomale", "1265", "Florence, Republic of Florence", "14 September 1321");
+        Author bronte = new Author("Charlotte Brontë", "English", Gender.FEMALE, "nomail", "21 April 1816", "Thornton, Yorkshire, England", "31 March 1855");
+        authorStorage.addAuthor(goethes);
+        authorStorage.addAuthor(dante);
+        authorStorage.addAuthor(bronte);
+        bookStorage.add(new Book("Faust", goethes, 6000, 6, "Drama"));
+        bookStorage.add(new Book("Divine comedy", dante, 5000, 2, "Poems"));
+        bookStorage.add(new Book("Jane Eyre", bronte, 4600, 7, "Novel"));
+    }
 
     private static void logUser(){
         System.out.println("Input userName");
@@ -121,11 +142,25 @@ public class BookDemo implements Commands{
         if(uPassword.length() <= 5 && uUserName.length() <= 5){
             throw new UsernameAandPasswordLengthMismatch("username and password length mismatch");
         }
-        Registration registration = new Registration(uName, uSurname, uYears, uUserName, uPassword);
+        UserType userType = regType();
+
+
+        User registration = new User(uName, uSurname, uYears, uUserName, uPassword, userType);
         userStorage.registrationUser(registration);
         System.out.println("User created.");
 
 
+    }
+
+    private static UserType regType() {
+        System.out.println("Chose registratio for admin or user.");
+        UserType userType = null;
+        try {
+            userType = UserType.valueOf(scanner.nextLine().toUpperCase());
+        }catch (IllegalArgumentException e){
+            System.out.println("Invalid usertype");
+        }
+        return userType;
     }
 
     private static void printAuthorByIndex() throws AuthorNotFoundException {

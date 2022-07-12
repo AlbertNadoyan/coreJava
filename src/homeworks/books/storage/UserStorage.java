@@ -1,23 +1,26 @@
 package homeworks.books.storage;
 
-import homeworks.books.models.Registration;
+import homeworks.books.models.User;
+import homeworks.books.models.UserType;
 
-public class UserStorage extends Registration{
+public class UserStorage extends User {
 
-    private Registration[] array = new Registration[10];
+    private User[] array = new User[10];
     private int size = 0;
 
     public int getSize() {
         return size;
     }
 
+
+
     public void setSize(int size) {
         this.size = size;
     }
 
-    public void registrationUser(Registration value){
+    public void registrationUser(User value){
         if(size == array.length){
-            Registration[] tmp = new Registration[array.length + 10];
+            User[] tmp = new User[array.length + 10];
             for (int i = 0; i < size; i++) {
                 tmp[i] = array[i];
             }
@@ -44,5 +47,14 @@ public class UserStorage extends Registration{
         if(count == 0){
             System.out.println("Invalid Username and/or password");
         }
+    }
+
+    public boolean getAdmin(UserType admin) {
+        for (int i = 0; i < size; i++) {
+            if (array[i].getUserType().equals(admin)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

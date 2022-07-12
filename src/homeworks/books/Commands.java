@@ -16,13 +16,18 @@ public interface Commands {
     int EXIT_USER_PAGE = 11;
 
 
-    static void printCommand(){
+
+    static void printAdminCommand(){
         System.out.println("Input " + ADD_BOOK + " for add book.");
+        System.out.println("Input " + ADD_AUTHOR + " for add author.");
+    }
+    static void printCommand(){
+//        System.out.println("Input " + ADD_BOOK + " for add book.");
         System.out.println("Input " + PRINT_ALL_BOOKS + " for print all books.");
         System.out.println("Input " + PRINT_BOOKS_BY_AUTHORNAME + " for print books by author name.");
         System.out.println("Input " + PRINT_BOOKS_BY_GENRE + " for print books by genre.");
         System.out.println("Input " + PRINT_BY_PRICE_RANGE + " for print books by price range.");
-        System.out.println("Input " + ADD_AUTHOR + " for add author.");
+//        System.out.println("Input " + ADD_AUTHOR + " for add author.");
         System.out.println("Input " + PRINT_ALL_AUTHOR + " for print all author.");
         System.out.println("Input " + PRINT_AUTHOR_BY_INDEX + " for print author by index.");
         System.out.println("Input " + EXIT_USER_PAGE + " for exit user page.");

@@ -1,21 +1,23 @@
 package homeworks.books.models;
 
-public class Registration {
+public class User {
     private String name;
     private String surname;
     private int years;
     private String username;
     private String password;
+    private UserType userType;
 
-    public Registration(String name, String surname, int years, String username, String password) {
+    public User(String name, String surname, int years, String username, String password, UserType userType) {
         this.name = name;
         this.surname = surname;
         this.years = years;
         this.username = username;
         this.password = password;
+        this.userType = userType;
     }
 
-    public Registration() {
+    public User() {
     }
 
     public String getName() {
@@ -58,14 +60,23 @@ public class Registration {
         this.password = password;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
     @Override
     public String toString() {
-        return "Registration{" +
+        return "User{" +
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", years=" + years +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", userType=" + userType +
                 '}';
     }
 }
