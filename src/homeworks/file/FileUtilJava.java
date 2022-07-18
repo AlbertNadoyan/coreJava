@@ -11,9 +11,9 @@ public class FileUtilJava {
     public static void main(String[] args) throws IOException {
 //        fileSearch();
 //        contentSearch();
-        findLines();
+//        findLines();
 //        printSizeOfPackage();
-//        createFileWithContent();
+        createFileWithContent();
 
     }
 
@@ -175,8 +175,19 @@ public class FileUtilJava {
                 myFile = new File(packageName);
                 myFile.mkdir();
                 if(myFile.isDirectory()){
-                    File createNewFile = new File(fileName);
+                    File createNewFile = new File(myFile.getAbsolutePath() + File.separator + fileName);
                     createNewFile.createNewFile();
+                    if(createNewFile.isFile()){
+                        try {
+                            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(createNewFile));
+                            bufferedWriter.write(contentFile);
+                            bufferedWriter.close();
+                        } catch (IOException e) {
+                            System.out.println("Error " + e.getMessage());
+                        }
+
+                    }
+
                 }
             }
         }
