@@ -175,18 +175,23 @@ public class FileUtilJava {
                 myFile = new File(packageName);
                 myFile.mkdir();
                 if(myFile.isDirectory()){
-                    File createNewFile = new File(myFile.getAbsolutePath() + File.separator + fileName);
-                    createNewFile.createNewFile();
-                    if(createNewFile.isFile()){
-                        try {
-                            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(createNewFile));
-                            bufferedWriter.write(contentFile);
-                            bufferedWriter.close();
-                        } catch (IOException e) {
-                            System.out.println("Error " + e.getMessage());
-                        }
+                    if(fileName.endsWith(".txt") || fileName.endsWith(".html") || fileName.endsWith(".java")){
+                        File createNewFile = new File(myFile.getAbsolutePath() + File.separator + fileName);
+                        createNewFile.createNewFile();
+                        if(createNewFile.isFile()){
+                            try {
+                                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(createNewFile));
+                                bufferedWriter.write(contentFile);
+                                bufferedWriter.close();
+                            } catch (IOException e) {
+                                System.out.println("Error " + e.getMessage());
+                            }
 
+                        }
+                    }else {
+                        System.out.println("Invalid file format");
                     }
+
 
                 }
             }
