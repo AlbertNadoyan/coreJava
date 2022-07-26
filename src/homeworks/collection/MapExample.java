@@ -10,15 +10,31 @@ public class MapExample {
     private static final List<FootballTeamMember> footballTeamMember = new ArrayList<>();
 
     public static void main(String[] args) {
+//        System.out.println(removeFromMap(hashFootball, 80));
+        FootballTeamMember footballTeamMember1 = new FootballTeamMember(7, "Torres");
+        FootballTeamMember footballTeamMember2 = new FootballTeamMember(8, "Xavi");
+        FootballTeamMember footballTeamMember3 = new FootballTeamMember(9, "Sanches");
+        footballTeamMember.add(footballTeamMember1);
+        footballTeamMember.add(footballTeamMember2);
+        footballTeamMember.add(footballTeamMember3);
         System.out.println(createFootballTeam(footballTeamMember));
-//        System.out.println(removeFromMap(footballTeamMember));
-
+//        for (FootballTeamMember arg : footballTeamMember) {
+//            System.out.println(arg.getNumber());
+//            System.out.println(arg.getName());
+//        }
+//        for (FootballTeamMember teamMember : footballTeamMember) {
+//            System.out.println(teamMember);
+//        }
+        printAllMemberNames(hashFootball);
+        printAllMembers(hashFootball);
 
     }
 
     //Ունենք FootballTeamMember-ի լիստ, պետք է ստանանք HashMap որտեղ կեյ-ը կլինի խաղացողի համարը, իսկ վելյուն իրա անունը։
     static Map<Integer, String> createFootballTeam(List<FootballTeamMember> members) {
-        hashFootball.put(9, "Torres");
+        for (FootballTeamMember member : members) {
+            hashFootball.put(member.getNumber(), member.getName());
+        }
         return hashFootball;
     }
 
@@ -28,7 +44,7 @@ public class MapExample {
         hashFootball.put(2, "b");
         hashFootball.put(3, "c");
         for (Integer integer : memberMap.keySet()) {
-            if(integer == removedNumber){
+            if(integer.equals(removedNumber)){
                 hashFootball.remove(removedNumber);
                 return true;
             }
@@ -38,6 +54,9 @@ public class MapExample {
 
     //Մեթոդով տպելու ենք միայն անունները
     static void printAllMemberNames(Map<Integer, String> memberMap) {
+        for (String value : memberMap.values()) {
+            System.out.println(value);
+        }
 
     }
 
@@ -45,7 +64,9 @@ public class MapExample {
     // 11 - Poxos Poxosyan
     // 12 - Petros Petrosyan
     static void printAllMembers(Map<Integer, String> memberMap) {
-
+        for (Map.Entry<Integer, String> entry : memberMap.entrySet()) {
+            System.out.println(entry.getKey() + " - " + entry.getValue());
+        }
     }
 
 
@@ -72,6 +93,14 @@ public class MapExample {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "FootballTeamMember{" +
+                    "number=" + number +
+                    ", name='" + name + '\'' +
+                    '}';
         }
     }
 }

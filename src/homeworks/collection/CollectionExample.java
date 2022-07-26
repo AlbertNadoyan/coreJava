@@ -15,9 +15,32 @@ public class CollectionExample {
 //        List<Integer> arrList = new ArrayList<>();
 //        System.out.println(listToLinkedList(arrList));
 //        System.out.println(listToLinkedList(arrList).getClass());
-        List<String> intList = new ArrayList<>();
-        System.out.println(sizeOfList(intList));
+//        List<String> intList = new ArrayList<>();
+//        System.out.println(sizeOfList(intList));
+//        List<Integer> list = new ArrayList<>();
+//        System.out.println(reverseNumbers(list));
+        List<String> fiveStr = new ArrayList<>();
+        addElem(fiveStr);
+        printFirstFive(fiveStr);
 
+    }
+
+    private static void addElem(List<String> fiveStr) {
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
+        fiveStr.add("a");
     }
 
     //մեթոդը գրել այնպես, որ կանչենք, ու իրան ստրինգների մասիվ տանք, ինքը վերադարձնի նույն էլեմենտներով ArrayList
@@ -79,17 +102,19 @@ public class CollectionExample {
             list.add(i);
         }
 
-        for (int i = 10; i > 0; i--) {
-            list.removeAll(list);
-
+        List<Integer> newList = new ArrayList<>();
+        for (int i = list.size(); i > 0; i--) {
+            newList.add(i);
         }
-        return null;
+        return newList;
 
     }
 
     // մեթոդը գրել այնպես, որ ինչ մեծությամբ լիստ էլ տանք էս մեթոդին, ինքը տպե մենակ սկզբի 5 հատը։
     static void printFirstFive(List<String> list) {
-
+        for (int i = 0; i < 5; i++) {
+            System.out.println(list.get(i));
+        }
     }
 
     // մեթոդը գրել այնպես, որ ինչ list տանք վերադարձնի թե քանի էլեմենտ կա էդ լիստ-ի մեջ
